@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>EliteFit AI Master - Mobile Edition</title>
+  <title>Imove - Mobile Edition</title>
   
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"></script>
@@ -23,7 +23,124 @@
 
     h1 { font-size: 1.5rem; margin: 15px 0; color: #00ff00; }
 
-    /* Panel Kontrol - Lebih Rapi di HP */
+    /* ================= MENU UTAMA ================= */
+    #home-screen {
+      padding: 10px 0;
+      display: block; 
+    }
+
+    .header-home {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 0 10px;
+    }
+
+    .home-title {
+      font-size: 1.8rem;
+      margin: 0;
+      color: white;
+    }
+
+    /* Container Kartu */
+    .category-container {
+      display: flex;
+      gap: 15px;
+      overflow-x: auto;
+      padding: 0 10px 20px 10px;
+      scroll-snap-type: x mandatory;
+    }
+
+    .category-container::-webkit-scrollbar { display: none; }
+
+    .card {
+      min-width: 150px;
+      height: 160px;
+      border-radius: 16px;
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      background-color: #333;
+      scroll-snap-align: start;
+      flex-shrink: 0;
+      border: 2px solid transparent;
+      transition: 0.3s;
+    }
+
+    .card:active {
+      transform: scale(0.95);
+      border: 2px solid #00ff00;
+    }
+
+    .card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.5;
+    }
+
+    .card h3 {
+      position: absolute;
+      bottom: 15px;
+      left: 15px;
+      margin: 0;
+      font-size: 18px;
+      color: white;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+      font-weight: bold;
+      pointer-events: none;
+    }
+
+    /* ================= SUB-MENU ================= */
+    #sub-menu-screen {
+      display: none; 
+      padding: 10px;
+    }
+
+    .btn-latihan {
+      background-color: #222;
+      color: white;
+      padding: 15px;
+      border: 1px solid #00ff00;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      text-align: left;
+      font-weight: bold;
+      transition: 0.2s;
+      margin-bottom: 10px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-latihan:active {
+      background-color: #00ff00;
+      color: black;
+    }
+
+    .btn-latihan span { font-size: 20px; }
+
+    #btn-back, #btn-back-kategori {
+      background-color: #333;
+      color: white;
+      padding: 10px 15px;
+      border: 1px solid #555;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      width: 100%;
+      text-align: left;
+    }
+    
+    /* ================= LAYAR KAMERA ================= */
+    #app-container {
+      display: none; 
+    }
+
     #control-panel { 
       background-color: #222; 
       padding: 15px; 
@@ -35,133 +152,102 @@
       gap: 10px;
     }
 
-    select { 
-      background-color: #333; 
-      color: white; 
-      border: 1px solid #00ff00; 
-      padding: 12px; 
-      border-radius: 8px; 
-      font-size: 16px;
-      width: 100%;
-    }
+    #box-pilihan { display: none; }
+    select { display: none; }
 
     .btn-action { 
-      font-size: 16px; 
-      padding: 15px; 
-      border-radius: 8px; 
-      color: white; 
-      border: none; 
-      cursor: pointer; 
-      font-weight: bold;
-      width: 100%;
-      transition: 0.2s;
+      font-size: 16px; padding: 15px; border-radius: 8px; color: white; border: none; 
+      cursor: pointer; font-weight: bold; width: 100%; transition: 0.2s;
     }
 
     #btn-start { background-color: #00ff00; color: black; }
     #btn-finish { background-color: #ff0055; display: none; }
 
-    /* Layout Video & Kamera - Responsif */
-    .split-screen { 
-      display: flex; 
-      flex-direction: column; /* Default stack ke bawah untuk HP */
-      gap: 15px; 
-      margin-bottom: 20px; 
-    }
-
-    .screen-box { 
-      background-color: #222; 
-      padding: 10px; 
-      border-radius: 15px; 
-      border: 1px solid #444;
-      width: 100%;
-      box-sizing: border-box;
-    }
+    .split-screen { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
+    .screen-box { background-color: #222; padding: 10px; border-radius: 15px; border: 1px solid #444; width: 100%; box-sizing: border-box; }
+    canvas { border: 2px solid #00ff00; border-radius: 10px; width: 100%; height: auto; background-color: #000; }
+    iframe { border: 2px solid #00e5ff; border-radius: 10px; width: 100%; aspect-ratio: 16 / 9; background-color: #000; }
     
-    /* Agar video & canvas tetap proporsional */
-    canvas { 
-      border: 2px solid #00ff00; 
-      border-radius: 10px; 
-      width: 100%; 
-      height: auto; 
-      background-color: #000; 
-    }
-
-    iframe { 
-      border: 2px solid #00e5ff; 
-      border-radius: 10px; 
-      width: 100%; 
-      aspect-ratio: 16 / 9; /* Otomatis hitung tinggi video */
-      background-color: #000; 
-    }
-    
-    /* Scoreboard */
-    #scoreboard { 
-      background-color: #222; 
-      padding: 15px; 
-      border-radius: 12px; 
-      border: 1px solid #444; 
-      text-align: center;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
+    #scoreboard { background-color: #222; padding: 15px; border-radius: 12px; border: 1px solid #444; text-align: center; width: 100%; box-sizing: border-box; }
     .highlight { color: #00ff00; font-size: 2.5rem; display: block; margin: 5px 0;}
-    
-    #warning-box { 
-      background-color: #440000; 
-      color: #ff4444; 
-      padding: 10px; 
-      border-radius: 8px; 
-      margin-top: 10px; 
-      display: none; 
-      font-weight: bold; 
-      border: 1px solid #ff0000;
-      font-size: 14px;
-    }
+    #warning-box { background-color: #440000; color: #ff4444; padding: 10px; border-radius: 8px; margin-top: 10px; display: none; font-weight: bold; border: 1px solid #ff0000; font-size: 14px; }
+    #countdown-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 80px; font-weight: bold; color: yellow; text-shadow: 2px 2px 10px black; z-index: 10; display: none; }
 
-    /* Report Summary Mobile */
-    #report-container { 
-      display: none; 
-      background-color: #222; 
-      border: 2px solid #00ff00; 
-      border-radius: 20px; 
-      padding: 25px; 
-      width: 90%;
-      max-width: 500px;
-      margin: 20px auto;
-    }
+    #report-container { display: none; background-color: #222; border: 2px solid #00ff00; border-radius: 20px; padding: 25px; width: 90%; max-width: 500px; margin: 20px auto; text-align: center; }
+    .report-val { font-size: 3rem; font-weight: bold; margin: 10px 0; }
 
-    /* Media Query untuk Tablet/Laptop - Layout Berdampingan */
     @media (min-width: 768px) {
       .split-screen { flex-direction: row; }
       #control-panel { flex-direction: row; align-items: center; justify-content: center; }
-      select, .btn-action { width: auto; }
       h1 { font-size: 2.5rem; }
     }
   </style>
 </head>
 <body>
 
+  <div id="home-screen">
+    <div class="header-home">
+      <h2 class="home-title">Categories</h2>
+    </div>
+    
+    <div class="category-container">
+      <div class="card" onclick="bukaKategori('cardio', 'Cardio Workout')">
+        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=300&q=80" alt="Cardio">
+        <h3>Cardio</h3>
+      </div>
+
+      <div class="card" onclick="bukaKategori('core', 'Core & Abs')">
+        <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=300&q=80" alt="Core">
+        <h3>Core (Abs)</h3>
+      </div>
+
+      <div class="card" onclick="bukaKategori('lowerbody', 'Lower Body')">
+        <img src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=300&q=80" alt="Lower Body">
+        <h3>Lower Body</h3>
+      </div>
+
+      <div class="card" onclick="bukaKategori('upperbody', 'Upper Body')">
+        <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=300&q=80" alt="Upper Body">
+        <h3>Upper Body</h3>
+      </div>
+    </div>
+  </div>
+
+  <div id="sub-menu-screen">
+    <button id="btn-back-kategori" onclick="kembaliKeHome()">⬅ Kembali ke Kategori</button>
+    <h2 id="judul-kategori" style="color: #00e5ff; border-bottom: 2px solid #333; padding-bottom: 10px; margin-top: 10px;">Nama Kategori</h2>
+    
+    <div id="daftar-latihan" style="margin-top: 20px;">
+      </div>
+  </div>
+
+
   <div id="app-container">
-    <h1>EliteFit AI - Smart Coach Edition</h1>
+    <button id="btn-back" onclick="kembaliKeSubMenu()">⬅ Kembali ke Daftar Latihan</button>
+    
+    <h1 style="margin-top: 5px;">Imove - Smart Coach</h1>
     
     <div id="control-panel">
-      Pilih Latihan: 
-      <select id="pilihanLatihan">
-        <option value="bicep">Bicep Curl (Tangan)</option>
-        <option value="squat">Squat (Kaki)</option>
-        <option value="jumpingjack">Jumping Jack (Full Body)</option>
-        <option value="pushup">Push Up (Dada & Lengan)</option>
-        <option value="shoulderpress">Shoulder Press (Bahu)</option>
-        <option value="lunge">Lunges (Kaki & Bokong)</option>
-        <option value="highknee">High Knees (Kardio)</option>
-        <option value="situp">Sit Up (Perut & Core)</option>
-        <option value="lateralraise">Lateral Raise (Bahu Samping)</option>
-        <option value="russiantwist">Russian Twist (Perut Samping)</option>
-        <option value="glutebridge">Glute Bridge (Bokong & Hamstring)</option>
-        <option value="calfraise">Calf Raise (Betis)</option>
-        <option value="bicyclecrunch">Standing Bicycle (Core & Kardio)</option>
-      </select>
+      <h3 id="judul-latihan-terpilih" style="margin: 0 0 10px 0; color: #00ff00; text-align: center; border-bottom: 1px solid #444; padding-bottom: 10px;">Nama Latihan</h3>
+      
+      <div id="box-pilihan">
+        <select id="pilihanLatihan">
+          <option value="bicep">Bicep Curl (Tangan)</option>
+          <option value="squat">Squat (Kaki)</option>
+          <option value="jumpingjack">Jumping Jack (Full Body)</option>
+          <option value="pushup">Push Up (Dada & Lengan)</option>
+          <option value="shoulderpress">Shoulder Press (Bahu)</option>
+          <option value="lunge">Lunges (Kaki & Bokong)</option>
+          <option value="highknee">High Knees (Kardio)</option>
+          <option value="situp">Sit Up (Perut & Core)</option>
+          <option value="lateralraise">Lateral Raise (Bahu Samping)</option>
+          <option value="russiantwist">Russian Twist (Perut Samping)</option>
+          <option value="glutebridge">Glute Bridge (Bokong & Hamstring)</option>
+          <option value="calfraise">Calf Raise (Betis)</option>
+          <option value="bicyclecrunch">Standing Bicycle (Core & Kardio)</option>
+        </select>
+      </div>
+
       <button id="btn-start" class="btn-action" onclick="mulaiLatihan()">▶ MULAI</button>
       <button id="btn-finish" class="btn-action" onclick="selesaiLatihan()">⏹ AKHIRI SESI</button>
     </div>
@@ -172,7 +258,7 @@
         <iframe id="youtube-video" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
       <div class="screen-box" style="position: relative;">
-        <h3 style="color: #00ff00; margin: 0 0 10px 0;">Kamera AI Anda</h3>
+        <h3 style="color: #00ff00; margin: 0 0 10px 0;">Kamera Anda</h3>
         <div id="countdown-overlay">5</div>
         <video class="input_video" style="display: none;"></video>
         <canvas class="output_canvas"></canvas>
@@ -188,18 +274,103 @@
   </div>
 
   <div id="report-container">
-    <div class="report-title">Workout Summary</div>
-    <hr border="1" color="#333">
-    <p>Jenis Latihan: <br><span id="hasilLatihan" style="font-size:20px; color:yellow;"></span></p>
+    <div class="report-title" style="font-size: 1.5rem; font-weight: bold; margin-bottom: 10px;">Workout Summary</div>
+    <hr style="border: 1px solid #444; margin-bottom: 20px;">
+    <p>Jenis Latihan: <br><span id="hasilLatihan" style="font-size:20px; color:yellow; font-weight:bold;"></span></p>
     <p>Total Repetisi (Benar & Salah):</p>
     <div class="report-val" id="hasilRepetisi">0</div>
     <p>Skor Kualitas Gerakan Akhir:</p>
     <div class="report-val" id="hasilKemiripan" style="color:#00ff00;">0%</div>
-    <p id="pesanMotivasi" style="font-style: italic; color: #aaa;"></p>
-    <button onclick="location.reload()" style="background:#00ff00; color:black; padding:15px 30px; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">MULAI LAGI</button>
+    <p id="pesanMotivasi" style="font-style: italic; color: #aaa; margin-bottom: 20px;"></p>
+    <button onclick="location.reload()" style="background:#00ff00; color:black; padding:15px 30px; border:none; border-radius:10px; font-weight:bold; cursor:pointer; width: 100%;">KE MENU UTAMA</button>
   </div>
 
   <script>
+    // ================= DATABASE KATEGORI LATIHAN =================
+    const databaseKategori = {
+      "cardio": [
+        { id: "jumpingjack", nama: "Jumping Jack" },
+        { id: "highknee", nama: "High Knees" }
+      ],
+      "core": [
+        { id: "situp", nama: "Sit Up" },
+        { id: "bicyclecrunch", nama: "Standing Bicycle" },
+        { id: "russiantwist", nama: "Russian Twist" }
+      ],
+      "lowerbody": [
+        { id: "squat", nama: "Squat" },
+        { id: "lunge", nama: "Lunges" },
+        { id: "glutebridge", nama: "Glute Bridge" },
+        { id: "calfraise", nama: "Calf Raise" }
+      ],
+      "upperbody": [
+        { id: "pushup", nama: "Push Up" },
+        { id: "bicep", nama: "Bicep Curl" },
+        { id: "shoulderpress", nama: "Shoulder Press" },
+        { id: "lateralraise", nama: "Lateral Raise" }
+      ]
+    };
+
+    // ================= LOGIKA PERPINDAHAN LAYAR =================
+    
+    // Dari Kategori (Home) -> Buka Daftar Latihan (Sub-Menu)
+    function bukaKategori(kategoriId, namaKategori) {
+      document.getElementById('home-screen').style.display = 'none';
+      document.getElementById('sub-menu-screen').style.display = 'block';
+      document.getElementById('judul-kategori').innerText = namaKategori;
+
+      const wadahLatihan = document.getElementById('daftar-latihan');
+      wadahLatihan.innerHTML = ''; // Bersihkan tombol sebelumnya
+
+      // Munculkan tombol sesuai daftar kategori
+      databaseKategori[kategoriId].forEach(latihan => {
+        let btn = document.createElement('button');
+        btn.className = 'btn-latihan';
+        btn.innerHTML = `${latihan.nama} <span>▶</span>`;
+        btn.onclick = () => masukKeKamera(latihan.id, latihan.nama);
+        wadahLatihan.appendChild(btn);
+      });
+    }
+
+    // Dari Sub-Menu -> Kembali ke Home
+    function kembaliKeHome() {
+      document.getElementById('sub-menu-screen').style.display = 'none';
+      document.getElementById('home-screen').style.display = 'block';
+    }
+
+    // Dari Sub-Menu -> Masuk ke Kamera
+    function masukKeKamera(jenisLatihanId, namaLatihanText) {
+      document.getElementById('sub-menu-screen').style.display = 'none';
+      document.getElementById('app-container').style.display = 'block';
+      
+      let selectMenu = document.getElementById('pilihanLatihan');
+      selectMenu.value = jenisLatihanId;
+      
+      document.getElementById('judul-latihan-terpilih').innerText = "Sesi: " + namaLatihanText;
+      selectMenu.dispatchEvent(new Event('change'));
+    }
+
+    // Dari Layar Kamera -> Kembali ke Sub Menu
+    function kembaliKeSubMenu() {
+      matikanKameraDanVideo();
+
+      document.getElementById('btn-start').style.display = 'block';
+      document.getElementById('btn-finish').style.display = 'none';
+
+      document.getElementById('app-container').style.display = 'none';
+      document.getElementById('sub-menu-screen').style.display = 'block';
+    }
+
+    // Fungsi pembersih memori kamera
+    function matikanKameraDanVideo() {
+      isLatihanAktif = false;
+      isAITracking = false;
+      countdownOverlay.style.display = "none";
+      if (isKameraAktif && camera) { camera.stop(); isKameraAktif = false; }
+      youtubeVideo.src = ""; 
+    }
+    // ============================================================
+
     const videoElement = document.getElementsByClassName('input_video')[0];
     const canvasElement = document.getElementsByClassName('output_canvas')[0];
     const canvasCtx = canvasElement.getContext('2d');
@@ -228,7 +399,6 @@
     let isAITracking = false; 
     let camera;
 
-    // Database Video Ditambah 4 Video Baru
     const databaseVideoID = {
       "bicep": "ykJmrZ5v0Oo",      
       "squat": "U3HlEF_E9fo",      
@@ -241,7 +411,7 @@
       "lateralraise": "nnH63icHYXY",
       "russiantwist": "wkD8rjkodUI", 
       "glutebridge": "8bbE64NuDTU",  
-      "calfraise": "-M4-G8p8fmc",    
+      "calfraise": "-M4-G8p8fmc",   
       "bicyclecrunch": "8lsAXzvVHrc"
     };
 
@@ -358,13 +528,13 @@
       canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
       
       if (results.poseLandmarks && isAITracking) {
-        drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, {color: '#00FF00', lineWidth: 4});
-        drawLandmarks(canvasCtx, results.poseLandmarks, {color: '#FF0000', lineWidth: 2});
+        // PERUBAHAN WARNA KERANGKA MENJADI CYAN GELAP (#008b8b)
+        drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, {color: '#008b8b', lineWidth: 4});
+        drawLandmarks(canvasCtx, results.poseLandmarks, {color: '#008b8b', lineWidth: 2});
 
         const mode = pilihanLatihan.value;
         const landmarks = results.poseLandmarks;
 
-        // --- SISTEM KEAMANAN VISIBILITAS ---
         let isVisible = false;
         if (mode === "bicep") isVisible = cekVisibilitas(landmarks, [11, 13, 15]);
         else if (mode === "squat") isVisible = cekVisibilitas(landmarks, [23, 25, 27]);
@@ -375,7 +545,6 @@
         else if (mode === "highknee") isVisible = cekVisibilitas(landmarks, [23, 24, 25, 26]);
         else if (mode === "situp") isVisible = cekVisibilitas(landmarks, [11, 23, 25]);
         else if (mode === "lateralraise") isVisible = cekVisibilitas(landmarks, [23, 11, 13]);
-        // Visibilitas Gerakan Baru
         else if (mode === "russiantwist") isVisible = cekVisibilitas(landmarks, [15, 16, 23, 24]);
         else if (mode === "glutebridge") isVisible = cekVisibilitas(landmarks, [11, 23, 25]);
         else if (mode === "calfraise") isVisible = cekVisibilitas(landmarks, [25, 27, 31]);
@@ -388,7 +557,7 @@
           return; 
         }
 
-        // --- PERHITUNGAN GERAKAN DIMULAI JIKA AMAN ---
+        // ================= PERHITUNGAN GERAKAN =================
         if (mode === "bicep") {
           let sudut = hitungSudut(landmarks[11], landmarks[13], landmarks[15]);
           if (sudut > 120) { 
@@ -586,8 +755,6 @@
             repTerhitung = true;
           }
         }
-
-        // --- TAMBAHAN 4 GERAKAN BARU ---
         
         if (mode === "russiantwist") {
           let wristX = (landmarks[15].x + landmarks[16].x) / 2;
@@ -661,18 +828,15 @@
     }
 
     function selesaiLatihan() {
-      isLatihanAktif = false;
-      isAITracking = false;
-      countdownOverlay.style.display = "none";
-      if (isKameraAktif && camera) { camera.stop(); isKameraAktif = false; }
-      youtubeVideo.src = ""; 
+      matikanKameraDanVideo();
 
       document.getElementById('app-container').style.display = 'none';
       document.getElementById('report-container').style.display = 'block';
       
       let rataRata = historiAkurasi.length > 0 ? Math.round(historiAkurasi.reduce((a,b)=>a+b)/historiAkurasi.length) : 0;
       
-      document.getElementById('hasilLatihan').innerText = pilihanLatihan.options[pilihanLatihan.selectedIndex].text;
+      // Ambil nama latihan dari judul yang sedang aktif
+      document.getElementById('hasilLatihan').innerText = document.getElementById('judul-latihan-terpilih').innerText.replace("Sesi: ", "");
       document.getElementById('hasilRepetisi').innerText = jumlahRepetisi;
       document.getElementById('hasilKemiripan').innerText = rataRata + "%";
       
