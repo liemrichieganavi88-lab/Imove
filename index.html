@@ -265,13 +265,15 @@
       </div>
     </div>
 
-    <div id="scoreboard">
-      Status: <span id="statusGerakan" style="color: gray;">Menunggu Anda klik Mulai...</span><br>
+   <div id="scoreboard">
       Repetisi: <span id="skorRepetisi" class="highlight" style="color: gray;">0</span><br>
-      Rata-rata Akurasi: <span id="live-accuracy" style="color: gray;">0%</span>
-      <div id="warning-box">❌ Kesalahan Terdeteksi!</div>
+      
+      <div style="display: none;">
+        Status: <span id="statusGerakan" style="color: gray;">Menunggu Anda klik Mulai...</span><br>
+        Rata-rata Akurasi: <span id="live-accuracy" style="color: gray;">0%</span>
+        <div id="warning-box">❌ Kesalahan Terdeteksi!</div>
+      </div>
     </div>
-  </div>
 
   <div id="report-container">
     <div class="report-title" style="font-size: 1.5rem; font-weight: bold; margin-bottom: 10px;">Workout Summary</div>
@@ -504,10 +506,10 @@
       liveAccuracy.innerText = rataRata + "%";
       
       if (skor === 100) {
-         suaraSukses.currentTime = 0; suaraSukses.play().catch(()=>{});
+        // suaraSukses.currentTime = 0; suaraSukses.play().catch(()=>{});
          warningBox.style.display = "none";
       } else {
-         suaraGagal.currentTime = 0; suaraGagal.play().catch(()=>{});
+        // suaraGagal.currentTime = 0; suaraGagal.play().catch(()=>{});
       }
     }
 
