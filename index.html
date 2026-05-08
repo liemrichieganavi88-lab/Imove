@@ -11,155 +11,32 @@
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js"></script>
 
   <style>
-    /* Dasar & Tipografi */
-    body { 
-      background-color: #111; 
-      color: white; 
-      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-      margin: 0; 
-      padding: 10px;
-      box-sizing: border-box;
-    }
-
+    body { background-color: #111; color: white; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 10px; box-sizing: border-box; }
     h1 { font-size: 1.5rem; margin: 15px 0; color: #00ff00; }
 
     /* ================= MENU UTAMA ================= */
-    #home-screen {
-      padding: 10px 0;
-      display: block; 
-    }
-
-    .header-home {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      padding: 0 10px;
-    }
-
-    .home-title {
-      font-size: 1.8rem;
-      margin: 0;
-      color: white;
-    }
-
-    /* Container Kartu */
-    .category-container {
-      display: flex;
-      gap: 15px;
-      overflow-x: auto;
-      padding: 0 10px 20px 10px;
-      scroll-snap-type: x mandatory;
-    }
-
+    #home-screen { padding: 10px 0; display: block; }
+    .header-home { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 10px; }
+    .home-title { font-size: 1.8rem; margin: 0; color: white; }
+    .category-container { display: flex; gap: 15px; overflow-x: auto; padding: 0 10px 20px 10px; scroll-snap-type: x mandatory; }
     .category-container::-webkit-scrollbar { display: none; }
+    .card { min-width: 150px; height: 160px; border-radius: 16px; position: relative; cursor: pointer; overflow: hidden; background-color: #333; scroll-snap-align: start; flex-shrink: 0; border: 2px solid transparent; transition: 0.3s; }
+    .card:active { transform: scale(0.95); border: 2px solid #00ff00; }
+    .card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; }
+    .card h3 { position: absolute; bottom: 15px; left: 15px; margin: 0; font-size: 18px; color: white; text-shadow: 1px 1px 4px rgba(0,0,0,0.8); font-weight: bold; pointer-events: none; }
 
-    .card {
-      min-width: 150px;
-      height: 160px;
-      border-radius: 16px;
-      position: relative;
-      cursor: pointer;
-      overflow: hidden;
-      background-color: #333;
-      scroll-snap-align: start;
-      flex-shrink: 0;
-      border: 2px solid transparent;
-      transition: 0.3s;
-    }
-
-    .card:active {
-      transform: scale(0.95);
-      border: 2px solid #00ff00;
-    }
-
-    .card img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0.5;
-    }
-
-    .card h3 {
-      position: absolute;
-      bottom: 15px;
-      left: 15px;
-      margin: 0;
-      font-size: 18px;
-      color: white;
-      text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
-      font-weight: bold;
-      pointer-events: none;
-    }
-
-    /* ================= SUB-MENU ================= */
-    #sub-menu-screen {
-      display: none; 
-      padding: 10px;
-    }
-
-    .btn-latihan {
-      background-color: #222;
-      color: white;
-      padding: 15px;
-      border: 1px solid #00ff00;
-      border-radius: 10px;
-      font-size: 16px;
-      cursor: pointer;
-      text-align: left;
-      font-weight: bold;
-      transition: 0.2s;
-      margin-bottom: 10px;
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .btn-latihan:active {
-      background-color: #00ff00;
-      color: black;
-    }
-
+    /* ================= SUB-MENU LATIHAN & MENU LAYOUT ================= */
+    #sub-menu-screen, #layout-screen { display: none; padding: 10px; }
+    .btn-latihan { background-color: #222; color: white; padding: 15px; border: 1px solid #00ff00; border-radius: 10px; font-size: 16px; cursor: pointer; text-align: left; font-weight: bold; transition: 0.2s; margin-bottom: 10px; width: 100%; display: flex; justify-content: space-between; align-items: center; }
+    .btn-latihan:active { background-color: #00ff00; color: black; }
     .btn-latihan span { font-size: 20px; }
-
-    #btn-back, #btn-back-kategori {
-      background-color: #333;
-      color: white;
-      padding: 10px 15px;
-      border: 1px solid #555;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      cursor: pointer;
-      font-weight: bold;
-      width: 100%;
-      text-align: left;
-    }
+    .btn-back { background-color: #333; color: white; padding: 10px 15px; border: 1px solid #555; border-radius: 8px; margin-bottom: 10px; cursor: pointer; font-weight: bold; width: 100%; text-align: left; }
     
     /* ================= LAYAR KAMERA ================= */
-    #app-container {
-      display: none; 
-    }
-
-    #control-panel { 
-      background-color: #222; 
-      padding: 15px; 
-      border-radius: 12px; 
-      margin-bottom: 20px; 
-      border: 1px solid #444;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    #box-pilihan { display: none; }
-    select { display: none; }
-
-    .btn-action { 
-      font-size: 16px; padding: 15px; border-radius: 8px; color: white; border: none; 
-      cursor: pointer; font-weight: bold; width: 100%; transition: 0.2s;
-    }
-
+    #app-container { display: none; }
+    #control-panel { background-color: #222; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #444; display: flex; flex-direction: column; gap: 10px; }
+    #box-pilihan, select { display: none; }
+    .btn-action { font-size: 16px; padding: 15px; border-radius: 8px; color: white; border: none; cursor: pointer; font-weight: bold; width: 100%; transition: 0.2s; }
     #btn-start { background-color: #00ff00; color: black; }
     #btn-finish { background-color: #ff0055; display: none; }
 
@@ -170,84 +47,75 @@
     
     #scoreboard { background-color: #222; padding: 15px; border-radius: 12px; border: 1px solid #444; text-align: center; width: 100%; box-sizing: border-box; }
     .highlight { color: #00ff00; font-size: 2.5rem; display: block; margin: 5px 0;}
-    #warning-box { background-color: #440000; color: #ff4444; padding: 10px; border-radius: 8px; margin-top: 10px; display: none; font-weight: bold; border: 1px solid #ff0000; font-size: 14px; }
     #countdown-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 80px; font-weight: bold; color: yellow; text-shadow: 2px 2px 10px black; z-index: 10; display: none; }
 
     #report-container { display: none; background-color: #222; border: 2px solid #00ff00; border-radius: 20px; padding: 25px; width: 90%; max-width: 500px; margin: 20px auto; text-align: center; }
     .report-val { font-size: 3rem; font-weight: bold; margin: 10px 0; }
 
+    /* ================= PENGATURAN LAYOUT KAMERA ================= */
+    .layout-full #youtube-box { display: none; }
+    .layout-full #camera-box { width: 100%; }
+
+    .layout-pip { position: relative; display: block; }
+    .layout-pip #youtube-box { width: 100%; margin-bottom: 0; }
+    .layout-pip #camera-box {
+      position: absolute; bottom: 15px; right: 15px; width: 140px; padding: 5px; 
+      background: rgba(0,0,0,0.8); z-index: 10; border: 2px solid #00ff00; border-radius: 10px;
+    }
+    .layout-pip #camera-box h3 { display: none; } 
+    .layout-pip #countdown-overlay { font-size: 40px; }
+
     @media (min-width: 768px) {
       .split-screen { flex-direction: row; }
       #control-panel { flex-direction: row; align-items: center; justify-content: center; }
       h1 { font-size: 2.5rem; }
+      .layout-pip #camera-box { width: 250px; bottom: 30px; right: 30px; }
     }
   </style>
 </head>
 <body>
 
   <div id="home-screen">
-    <div class="header-home">
-      <h2 class="home-title">Categories</h2>
-    </div>
-    
+    <div class="header-home"><h2 class="home-title">Categories</h2></div>
     <div class="category-container">
-      <div class="card" onclick="bukaKategori('cardio', 'Cardio Workout')">
-        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=300&q=80" alt="Cardio">
-        <h3>Cardio</h3>
-      </div>
-
-      <div class="card" onclick="bukaKategori('core', 'Core & Abs')">
-        <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=300&q=80" alt="Core">
-        <h3>Core (Abs)</h3>
-      </div>
-
-      <div class="card" onclick="bukaKategori('lowerbody', 'Lower Body')">
-        <img src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=300&q=80" alt="Lower Body">
-        <h3>Lower Body</h3>
-      </div>
-
-      <div class="card" onclick="bukaKategori('upperbody', 'Upper Body')">
-        <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=300&q=80" alt="Upper Body">
-        <h3>Upper Body</h3>
-      </div>
+      <div class="card" onclick="bukaKategori('cardio', 'Cardio Workout')"><img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=300&q=80"><h3>Cardio</h3></div>
+      <div class="card" onclick="bukaKategori('core', 'Core & Abs')"><img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=300&q=80"><h3>Core (Abs)</h3></div>
+      <div class="card" onclick="bukaKategori('lowerbody', 'Lower Body')"><img src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=300&q=80"><h3>Lower Body</h3></div>
+      <div class="card" onclick="bukaKategori('upperbody', 'Upper Body')"><img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=300&q=80"><h3>Upper Body</h3></div>
     </div>
   </div>
 
   <div id="sub-menu-screen">
-    <button id="btn-back-kategori" onclick="kembaliKeHome()">⬅ Kembali ke Kategori</button>
+    <button class="btn-back" onclick="kembaliKeHome()">⬅ Kembali ke Kategori</button>
     <h2 id="judul-kategori" style="color: #00e5ff; border-bottom: 2px solid #333; padding-bottom: 10px; margin-top: 10px;">Nama Kategori</h2>
-    
-    <div id="daftar-latihan" style="margin-top: 20px;">
-      </div>
+    <div id="daftar-latihan" style="margin-top: 20px;"></div>
   </div>
 
+  <div id="layout-screen">
+    <button class="btn-back" onclick="kembaliKeSubMenuDariLayout()">⬅ Batal & Kembali</button>
+    <h2 style="color: #00e5ff; border-bottom: 2px solid #333; padding-bottom: 10px; margin-top: 10px;">Pengaturan Kamera</h2>
+    <p style="color: #ccc; margin-bottom: 20px;">Pilih tata letak layar untuk latihan <strong id="nama-latihan-layout" style="color: #00ff00;"></strong> Anda:</p>
+    
+    <button class="btn-latihan" onclick="lanjutKeKamera('split')">Layar Setengah (Video & Kamera) <span>📱</span></button>
+    <button class="btn-latihan" onclick="lanjutKeKamera('full')">Full Kamera Anda Saja <span>📷</span></button>
+    <button class="btn-latihan" onclick="lanjutKeKamera('pip')">Pop-up (Kamera Kecil di Pojok) <span>🔲</span></button>
+  </div>
 
   <div id="app-container">
-    <button id="btn-back" onclick="kembaliKeSubMenu()">⬅ Kembali ke Daftar Latihan</button>
-    
+    <button class="btn-back" onclick="kembaliKeMenuLayout()">⬅ Ganti Tata Letak / Kembali</button>
     <h1 style="margin-top: 5px;">Imove - Smart Coach</h1>
     
     <div id="control-panel">
       <h3 id="judul-latihan-terpilih" style="margin: 0 0 10px 0; color: #00ff00; text-align: center; border-bottom: 1px solid #444; padding-bottom: 10px;">Nama Latihan</h3>
-      
       <div id="box-pilihan">
         <select id="pilihanLatihan">
-          <option value="bicep">Bicep Curl (Tangan)</option>
-          <option value="squat">Squat (Kaki)</option>
-          <option value="jumpingjack">Jumping Jack (Full Body)</option>
-          <option value="pushup">Push Up (Dada & Lengan)</option>
-          <option value="shoulderpress">Shoulder Press (Bahu)</option>
-          <option value="lunge">Lunges (Kaki & Bokong)</option>
-          <option value="highknee">High Knees (Kardio)</option>
-          <option value="situp">Sit Up (Perut & Core)</option>
-          <option value="lateralraise">Lateral Raise (Bahu Samping)</option>
-          <option value="russiantwist">Russian Twist (Perut Samping)</option>
-          <option value="glutebridge">Glute Bridge (Bokong & Hamstring)</option>
-          <option value="calfraise">Calf Raise (Betis)</option>
-          <option value="bicyclecrunch">Standing Bicycle (Core & Kardio)</option>
+          <option value="bicep">Bicep Curl</option><option value="squat">Squat</option><option value="jumpingjack">Jumping Jack</option>
+          <option value="pushup">Push Up</option><option value="shoulderpress">Shoulder Press</option><option value="lunge">Lunges</option>
+          <option value="highknee">High Knees</option><option value="situp">Sit Up</option><option value="lateralraise">Lateral Raise</option>
+          <option value="russiantwist">Russian Twist</option><option value="glutebridge">Glute Bridge</option><option value="calfraise">Calf Raise</option>
+          <option value="bicyclecrunch">Standing Bicycle</option>
         </select>
       </div>
-
       <button id="btn-start" class="btn-action" onclick="mulaiLatihan()">▶ MULAI</button>
       <button id="btn-finish" class="btn-action" onclick="selesaiLatihan()">⏹ AKHIRI SESI</button>
     </div>
@@ -257,7 +125,7 @@
         <h3 style="color: #00e5ff; margin: 0 0 10px 0;">Video Referensi</h3>
         <iframe id="youtube-video" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
-      <div class="screen-box" style="position: relative;">
+      <div class="screen-box" id="camera-box" style="position: relative;">
         <h3 style="color: #00ff00; margin: 0 0 10px 0;">Kamera Anda</h3>
         <div id="countdown-overlay">5</div>
         <video class="input_video" style="display: none;"></video>
@@ -265,21 +133,21 @@
       </div>
     </div>
 
-   <div id="scoreboard">
+    <div id="scoreboard">
       Repetisi: <span id="skorRepetisi" class="highlight" style="color: gray;">0</span><br>
-      
       <div style="display: none;">
         Status: <span id="statusGerakan" style="color: gray;">Menunggu Anda klik Mulai...</span><br>
         Rata-rata Akurasi: <span id="live-accuracy" style="color: gray;">0%</span>
         <div id="warning-box">❌ Kesalahan Terdeteksi!</div>
       </div>
     </div>
+  </div>
 
   <div id="report-container">
     <div class="report-title" style="font-size: 1.5rem; font-weight: bold; margin-bottom: 10px;">Workout Summary</div>
     <hr style="border: 1px solid #444; margin-bottom: 20px;">
     <p>Jenis Latihan: <br><span id="hasilLatihan" style="font-size:20px; color:yellow; font-weight:bold;"></span></p>
-    <p>Total Repetisi (Benar & Salah):</p>
+    <p>Total Repetisi (Sempurna):</p>
     <div class="report-val" id="hasilRepetisi">0</div>
     <p>Skor Kualitas Gerakan Akhir:</p>
     <div class="report-val" id="hasilKemiripan" style="color:#00ff00;">0%</div>
@@ -288,90 +156,80 @@
   </div>
 
   <script>
-    // ================= DATABASE KATEGORI LATIHAN =================
     const databaseKategori = {
-      "cardio": [
-        { id: "jumpingjack", nama: "Jumping Jack" },
-        { id: "highknee", nama: "High Knees" }
-      ],
-      "core": [
-        { id: "situp", nama: "Sit Up" },
-        { id: "bicyclecrunch", nama: "Standing Bicycle" },
-        { id: "russiantwist", nama: "Russian Twist" }
-      ],
-      "lowerbody": [
-        { id: "squat", nama: "Squat" },
-        { id: "lunge", nama: "Lunges" },
-        { id: "glutebridge", nama: "Glute Bridge" },
-        { id: "calfraise", nama: "Calf Raise" }
-      ],
-      "upperbody": [
-        { id: "pushup", nama: "Push Up" },
-        { id: "bicep", nama: "Bicep Curl" },
-        { id: "shoulderpress", nama: "Shoulder Press" },
-        { id: "lateralraise", nama: "Lateral Raise" }
-      ]
+      "cardio": [ { id: "jumpingjack", nama: "Jumping Jack" }, { id: "highknee", nama: "High Knees" } ],
+      "core": [ { id: "situp", nama: "Sit Up" }, { id: "bicyclecrunch", nama: "Standing Bicycle" }, { id: "russiantwist", nama: "Russian Twist" } ],
+      "lowerbody": [ { id: "squat", nama: "Squat" }, { id: "lunge", nama: "Lunges" }, { id: "glutebridge", nama: "Glute Bridge" }, { id: "calfraise", nama: "Calf Raise" } ],
+      "upperbody": [ { id: "pushup", nama: "Push Up" }, { id: "bicep", nama: "Bicep Curl" }, { id: "shoulderpress", nama: "Shoulder Press" }, { id: "lateralraise", nama: "Lateral Raise" } ]
     };
 
-    // ================= LOGIKA PERPINDAHAN LAYAR =================
-    
-    // Dari Kategori (Home) -> Buka Daftar Latihan (Sub-Menu)
+    let latihanTerpilihId = "";
+    let latihanTerpilihNama = "";
+
     function bukaKategori(kategoriId, namaKategori) {
       document.getElementById('home-screen').style.display = 'none';
       document.getElementById('sub-menu-screen').style.display = 'block';
       document.getElementById('judul-kategori').innerText = namaKategori;
-
       const wadahLatihan = document.getElementById('daftar-latihan');
-      wadahLatihan.innerHTML = ''; // Bersihkan tombol sebelumnya
-
-      // Munculkan tombol sesuai daftar kategori
+      wadahLatihan.innerHTML = ''; 
       databaseKategori[kategoriId].forEach(latihan => {
         let btn = document.createElement('button');
         btn.className = 'btn-latihan';
         btn.innerHTML = `${latihan.nama} <span>▶</span>`;
-        btn.onclick = () => masukKeKamera(latihan.id, latihan.nama);
+        // UPDATE: Arahkan ke Menu Layout
+        btn.onclick = () => bukaMenuLayout(latihan.id, latihan.nama);
         wadahLatihan.appendChild(btn);
       });
     }
 
-    // Dari Sub-Menu -> Kembali ke Home
     function kembaliKeHome() {
       document.getElementById('sub-menu-screen').style.display = 'none';
       document.getElementById('home-screen').style.display = 'block';
     }
 
-    // Dari Sub-Menu -> Masuk ke Kamera
-    function masukKeKamera(jenisLatihanId, namaLatihanText) {
+    function bukaMenuLayout(id, nama) {
+      latihanTerpilihId = id;
+      latihanTerpilihNama = nama;
       document.getElementById('sub-menu-screen').style.display = 'none';
-      document.getElementById('app-container').style.display = 'block';
-      
-      let selectMenu = document.getElementById('pilihanLatihan');
-      selectMenu.value = jenisLatihanId;
-      
-      document.getElementById('judul-latihan-terpilih').innerText = "Sesi: " + namaLatihanText;
-      selectMenu.dispatchEvent(new Event('change'));
+      document.getElementById('layout-screen').style.display = 'block';
+      document.getElementById('nama-latihan-layout').innerText = nama;
     }
 
-    // Dari Layar Kamera -> Kembali ke Sub Menu
-    function kembaliKeSubMenu() {
-      matikanKameraDanVideo();
-
-      document.getElementById('btn-start').style.display = 'block';
-      document.getElementById('btn-finish').style.display = 'none';
-
-      document.getElementById('app-container').style.display = 'none';
+    function kembaliKeSubMenuDariLayout() {
+      document.getElementById('layout-screen').style.display = 'none';
       document.getElementById('sub-menu-screen').style.display = 'block';
     }
 
-    // Fungsi pembersih memori kamera
+    function lanjutKeKamera(modeLayout) {
+      document.getElementById('layout-screen').style.display = 'none';
+      document.getElementById('app-container').style.display = 'block';
+      
+      const container = document.querySelector('.split-screen');
+      container.classList.remove('layout-full', 'layout-pip');
+      if (modeLayout === 'full') container.classList.add('layout-full');
+      else if (modeLayout === 'pip') container.classList.add('layout-pip');
+      
+      let selectMenu = document.getElementById('pilihanLatihan');
+      selectMenu.value = latihanTerpilihId;
+      document.getElementById('judul-latihan-terpilih').innerText = "Sesi: " + latihanTerpilihNama;
+      selectMenu.dispatchEvent(new Event('change'));
+    }
+
+    function kembaliKeMenuLayout() {
+      matikanKameraDanVideo();
+      document.getElementById('btn-start').style.display = 'block';
+      document.getElementById('btn-finish').style.display = 'none';
+      document.getElementById('app-container').style.display = 'none';
+      document.getElementById('layout-screen').style.display = 'block';
+    }
+
     function matikanKameraDanVideo() {
       isLatihanAktif = false;
       isAITracking = false;
-      countdownOverlay.style.display = "none";
+      document.getElementById('countdown-overlay').style.display = "none";
       if (isKameraAktif && camera) { camera.stop(); isKameraAktif = false; }
-      youtubeVideo.src = ""; 
+      document.getElementById('youtube-video').src = ""; 
     }
-    // ============================================================
 
     const videoElement = document.getElementsByClassName('input_video')[0];
     const canvasElement = document.getElementsByClassName('output_canvas')[0];
@@ -383,95 +241,52 @@
     const skorRepetisi = document.getElementById('skorRepetisi');
     const liveAccuracy = document.getElementById('live-accuracy');
     const warningBox = document.getElementById('warning-box');
-    const scoreboard = document.getElementById('scoreboard');
     const countdownOverlay = document.getElementById('countdown-overlay');
 
-    const suaraSukses = new Audio('https://www.soundjay.com/buttons/sounds/button-09.mp3');
-    const suaraGagal = new Audio('https://www.soundjay.com/buttons/sounds/beep-07.mp3');
-
-    let jumlahRepetisi = 0;
-    let historiAkurasi = [];
-    let statusMemori = "awal"; 
-    
-    let repTerhitung = false; 
-    let kualitasRep = 100; 
-    
-    let isLatihanAktif = false;
-    let isKameraAktif = false;
-    let isAITracking = false; 
-    let camera;
+    let jumlahRepetisi = 0; let historiAkurasi = []; let statusMemori = "awal"; 
+    let repTerhitung = false; let kualitasRep = 100; 
+    let isLatihanAktif = false; let isKameraAktif = false; let isAITracking = false; let camera;
 
     const databaseVideoID = {
-      "bicep": "ykJmrZ5v0Oo",      
-      "squat": "U3HlEF_E9fo",      
-      "jumpingjack": "Q4QnlZs9PqI",
-      "pushup": "IODxDxX7oi4",
-      "shoulderpress": "tzZMsrzG_zE", 
-      "lunge": "QOVaHwm-Q6U",        
-      "highknee": "oDdkytliOqE",
-      "situp": "1fbU_MkV7NE", 
-      "lateralraise": "nnH63icHYXY",
-      "russiantwist": "wkD8rjkodUI", 
-      "glutebridge": "8bbE64NuDTU",  
-      "calfraise": "-M4-G8p8fmc",   
-      "bicyclecrunch": "8lsAXzvVHrc"
+      "bicep": "ykJmrZ5v0Oo", "squat": "U3HlEF_E9fo", "jumpingjack": "Q4QnlZs9PqI",
+      "pushup": "IODxDxX7oi4", "shoulderpress": "tzZMsrzG_zE", "lunge": "QOVaHwm-Q6U",        
+      "highknee": "oDdkytliOqE", "situp": "1fbU_MkV7NE", "lateralraise": "nnH63icHYXY",
+      "russiantwist": "wkD8rjkodUI", "glutebridge": "8bbE64NuDTU", "calfraise": "-M4-G8p8fmc", "bicyclecrunch": "8lsAXzvVHrc"
     };
 
     const pose = new Pose({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`});
-    pose.setOptions({ modelComplexity: 1, smoothLandmarks: true, minDetectionConfidence: 0.85, minTrackingConfidence: 0.75 });
+    pose.setOptions({ modelComplexity: 1, smoothLandmarks: true, minDetectionConfidence: 0.75, minTrackingConfidence: 0.75 });
     pose.onResults(onResults);
 
     function jalankanHitungMundur() {
       let waktu = 5;
       countdownOverlay.style.display = "block";
       countdownOverlay.innerText = waktu;
-      statusGerakan.innerText = "Posisi Bersiap! Mundur dari layar...";
-      statusGerakan.style.color = "yellow";
-
+      statusGerakan.innerText = "Bersiap...";
+      
       let timer = setInterval(() => {
         waktu--;
-        if (waktu > 0) {
-          countdownOverlay.innerText = waktu;
-        } else {
+        if (waktu > 0) { countdownOverlay.innerText = waktu; } 
+        else {
           clearInterval(timer);
           countdownOverlay.style.display = "none";
-          statusGerakan.innerText = "Mulai Gerakan Sekarang!";
-          statusGerakan.style.color = "#00ff00";
+          statusGerakan.innerText = "Mulai!";
           isAITracking = true; 
         }
       }, 1000);
     }
 
     function mulaiLatihan() {
-      isLatihanAktif = true;
-      isAITracking = false; 
+      isLatihanAktif = true; isAITracking = false; 
       document.getElementById('btn-start').style.display = 'none';
       document.getElementById('btn-finish').style.display = 'inline-block';
-      scoreboard.style.borderColor = '#00ff00';
-      
       skorRepetisi.style.color = "#00ff00";
-      liveAccuracy.style.color = "#00e5ff"; 
-      liveAccuracy.innerText = "0%";
-
-      updateVideo();
+      liveAccuracy.innerText = "0%"; updateVideo();
 
       if (!isKameraAktif) {
-        statusGerakan.innerText = "Meminta Akses Kamera..."; 
-        camera = new Camera(videoElement, { 
-            onFrame: async () => { await pose.send({image: videoElement}); }, 
-            width: 640, height: 480 
-        });
-        
-        camera.start().then(() => {
-            isKameraAktif = true;
-            jalankanHitungMundur(); 
-        }).catch((err) => {
-            statusGerakan.innerText = "Kamera Diblokir Browser!";
-            statusGerakan.style.color = "#ff4444";
-        });
-      } else {
-        jalankanHitungMundur(); 
-      }
+        camera = new Camera(videoElement, { onFrame: async () => { await pose.send({image: videoElement}); }, width: 640, height: 480 });
+        camera.start().then(() => { isKameraAktif = true; jalankanHitungMundur(); });
+      } else { jalankanHitungMundur(); }
     }
 
     function updateVideo() {
@@ -481,63 +296,42 @@
     }
 
     pilihanLatihan.addEventListener('change', () => {
-      jumlahRepetisi = 0; historiAkurasi = []; statusMemori = "awal";
-      repTerhitung = false; kualitasRep = 100;
-      skorRepetisi.innerText = "0"; 
-      warningBox.style.display = "none";
-      if (isLatihanAktif) {
-        liveAccuracy.innerText = "0%";
-        updateVideo();
-      }
+      jumlahRepetisi = 0; historiAkurasi = []; statusMemori = "awal"; repTerhitung = false; kualitasRep = 100;
+      skorRepetisi.innerText = "0"; warningBox.style.display = "none";
+      if (isLatihanAktif) { liveAccuracy.innerText = "0%"; updateVideo(); }
     });
 
     function hitungSudut(titikA, titikB, titikC) {
       let radians = Math.atan2(titikC.y - titikB.y, titikC.x - titikB.x) - Math.atan2(titikA.y - titikB.y, titikA.x - titikB.x);
       let sudut = Math.abs(radians * 180.0 / Math.PI);
-      if (sudut > 180.0) sudut = 360 - sudut;
-      return sudut;
+      if (sudut > 180.0) sudut = 360 - sudut; return sudut;
     }
 
     function catatRep(skor) {
-      jumlahRepetisi++; skorRepetisi.innerText = jumlahRepetisi;
       historiAkurasi.push(skor); 
-      
       let rataRata = Math.round(historiAkurasi.reduce((a,b)=>a+b) / historiAkurasi.length);
-      liveAccuracy.innerText = rataRata + "%";
-      
-      if (skor === 100) {
-        // suaraSukses.currentTime = 0; suaraSukses.play().catch(()=>{});
-         warningBox.style.display = "none";
-      } else {
-        // suaraGagal.currentTime = 0; suaraGagal.play().catch(()=>{});
-      }
+      document.getElementById('live-accuracy').innerText = rataRata + "%";
+      if (skor === 100) { jumlahRepetisi++; skorRepetisi.innerText = jumlahRepetisi; }
     }
 
     function cekVisibilitas(landmarks, titikArray) {
-      for (let i = 0; i < titikArray.length; i++) {
-        if (!landmarks[titikArray[i]] || landmarks[titikArray[i]].visibility < 0.65) {
-          return false;
-        }
-      }
+      for (let i = 0; i < titikArray.length; i++) { if (!landmarks[titikArray[i]] || landmarks[titikArray[i]].visibility < 0.85) return false; }
       return true;
     }
 
     function onResults(results) {
       if (!isLatihanAktif) return;
-
       canvasCtx.save();
       canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
       canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
       
       if (results.poseLandmarks && isAITracking) {
-        // PERUBAHAN WARNA KERANGKA MENJADI CYAN GELAP (#008b8b)
-        drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, {color: '#cccccc', lineWidth: 1});
-        drawLandmarks(canvasCtx, results.poseLandmarks, {color: '#cccccc', lineWidth: 1});
+        drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, {color: '#cccccc', lineWidth: 2});
+        drawLandmarks(canvasCtx, results.poseLandmarks, {color: '#cccccc', lineWidth: 1, radius: 1.5});
 
-        const mode = pilihanLatihan.value;
-        const landmarks = results.poseLandmarks;
-
+        const mode = pilihanLatihan.value; const landmarks = results.poseLandmarks;
         let isVisible = false;
+        
         if (mode === "bicep") isVisible = cekVisibilitas(landmarks, [11, 13, 15]);
         else if (mode === "squat") isVisible = cekVisibilitas(landmarks, [23, 25, 27]);
         else if (mode === "jumpingjack") isVisible = cekVisibilitas(landmarks, [11, 12, 15, 16, 27, 28]);
@@ -552,278 +346,73 @@
         else if (mode === "calfraise") isVisible = cekVisibilitas(landmarks, [25, 27, 31]);
         else if (mode === "bicyclecrunch") isVisible = cekVisibilitas(landmarks, [13, 14, 25, 26]);
 
-        if (!isVisible) {
-          warningBox.style.display = "block";
-          warningBox.innerText = "⚠️ Mundur sedikit! Bagian tubuh utama tidak terlihat jelas.";
-          canvasCtx.restore();
-          return; 
-        }
+        if (!isVisible) { warningBox.style.display = "block"; canvasCtx.restore(); return; }
 
-        // ================= PERHITUNGAN GERAKAN =================
         if (mode === "bicep") {
           let sudut = hitungSudut(landmarks[11], landmarks[13], landmarks[15]);
-          if (sudut > 120) { 
-            if (sudut < 150) { 
-              kualitasRep = 50;
-              warningBox.style.display = "block"; warningBox.innerText = "❌ Luruskan tangan sepenuhnya saat turun!";
-            } else { 
-              kualitasRep = 100;
-              warningBox.style.display = "none";
-            }
-            statusMemori = "bawah"; statusGerakan.innerText = "Tarik Ke Atas";
-            repTerhitung = false;
-          }
-          if (sudut < 60 && statusMemori === "bawah" && !repTerhitung) { 
-            if (sudut > 50) { 
-               kualitasRep = Math.min(kualitasRep, 50);
-               warningBox.style.display = "block"; warningBox.innerText = "❌ Tarik lebih ke atas bahu!";
-            }
-            catatRep(kualitasRep);
-            statusMemori = "atas";
-            repTerhitung = true;
-          }
+          if (sudut > 120) { if (sudut < 150) { kualitasRep = 50; warningBox.style.display = "block"; } else { kualitasRep = 100; warningBox.style.display = "none"; } statusMemori = "bawah"; repTerhitung = false; }
+          if (sudut < 60 && statusMemori === "bawah" && !repTerhitung) { if (sudut > 45) { kualitasRep = Math.min(kualitasRep, 50); warningBox.style.display = "block"; } catatRep(kualitasRep); statusMemori = "atas"; repTerhitung = true; }
         }
-
         if (mode === "squat") {
           let sudut = hitungSudut(landmarks[23], landmarks[25], landmarks[27]);
-          if (sudut < 130) { 
-            if (sudut > 105) { 
-              kualitasRep = 50;
-              warningBox.style.display = "block"; warningBox.innerText = "❌ Jongkok kurang dalam!";
-            } else {
-              kualitasRep = 100;
-              warningBox.style.display = "none";
-            }
-            statusMemori = "bawah"; statusGerakan.innerText = "Dorong Berdiri";
-            repTerhitung = false;
-          }
-          if (sudut > 160 && statusMemori === "bawah" && !repTerhitung) { 
-            catatRep(kualitasRep);
-            statusMemori = "atas"; statusGerakan.innerText = "Turun Jongkok";
-            repTerhitung = true;
-          }
+          if (sudut < 130) { if (sudut > 105) { kualitasRep = 50; warningBox.style.display = "block"; } else { kualitasRep = 100; warningBox.style.display = "none"; } statusMemori = "bawah"; repTerhitung = false; }
+          if (sudut > 160 && statusMemori === "bawah" && !repTerhitung) { catatRep(kualitasRep); statusMemori = "atas"; repTerhitung = true; }
         }
-
         if (mode === "jumpingjack") {
-          let tinggiTangan = (landmarks[11].y - landmarks[15].y); 
-          let jarakKaki = Math.abs(landmarks[27].x - landmarks[28].x);
-          let lebarBahu = Math.abs(landmarks[11].x - landmarks[12].x);
-          if (jarakKaki > lebarBahu * 1.1 || tinggiTangan > 0) { 
-            if (jarakKaki < lebarBahu * 1.5 || tinggiTangan < 0.15) { 
-              kualitasRep = 50;
-              warningBox.style.display = "block"; warningBox.innerText = "❌ Buka kaki & tangan lebih lebar/tinggi!";
-            } else {
-              kualitasRep = 100;
-              warningBox.style.display = "none";
-            }
-            statusMemori = "terbuka"; statusGerakan.innerText = "Tutup Kembali";
-            repTerhitung = false;
-          }
-          if (jarakKaki < lebarBahu * 1.1 && tinggiTangan < -0.1 && statusMemori === "terbuka" && !repTerhitung) { 
-            catatRep(kualitasRep);
-            statusMemori = "tertutup"; statusGerakan.innerText = "Lompat Buka!";
-            repTerhitung = true;
-          }
+          let tinggiTangan = (landmarks[11].y - landmarks[15].y); let jarakKaki = Math.abs(landmarks[27].x - landmarks[28].x); let lebarBahu = Math.abs(landmarks[11].x - landmarks[12].x);
+          if (jarakKaki > lebarBahu * 1.1 || tinggiTangan > 0) { if (jarakKaki < lebarBahu * 1.5 || tinggiTangan < 0.15) { kualitasRep = 50; warningBox.style.display = "block"; } else { kualitasRep = 100; warningBox.style.display = "none"; } statusMemori = "terbuka"; repTerhitung = false; }
+          if (jarakKaki < lebarBahu * 1.1 && tinggiTangan < -0.1 && statusMemori === "terbuka" && !repTerhitung) { catatRep(kualitasRep); statusMemori = "tertutup"; repTerhitung = true; }
         }
-
         if (mode === "pushup") {
           let sudut = hitungSudut(landmarks[11], landmarks[13], landmarks[15]);
-          if (sudut < 120) { 
-            if (sudut > 95) { 
-              kualitasRep = 50;
-              warningBox.style.display = "block"; warningBox.innerText = "❌ Turunkan dada lebih dekat ke lantai!";
-            } else {
-              kualitasRep = 100;
-              warningBox.style.display = "none";
-            }
-            statusMemori = "bawah"; statusGerakan.innerText = "Dorong Ke Atas";
-            repTerhitung = false;
-          }
-          if (sudut > 160 && statusMemori === "bawah" && !repTerhitung) { 
-            catatRep(kualitasRep);
-            statusMemori = "atas"; statusGerakan.innerText = "Turunkan Badan";
-            repTerhitung = true;
-          }
+          if (sudut < 120) { if (sudut > 95) { kualitasRep = 50; warningBox.style.display = "block"; } else { kualitasRep = 100; warningBox.style.display = "none"; } statusMemori = "bawah"; repTerhitung = false; }
+          if (sudut > 160 && statusMemori === "bawah" && !repTerhitung) { catatRep(kualitasRep); statusMemori = "atas"; repTerhitung = true; }
         }
-
         if (mode === "shoulderpress") {
           let sudut = hitungSudut(landmarks[11], landmarks[13], landmarks[15]);
-          if (sudut < 110) { 
-            if (sudut > 85) { 
-              kualitasRep = 50;
-              warningBox.style.display = "block"; warningBox.innerText = "❌ Turunkan siku sejajar bahu!";
-            } else {
-              kualitasRep = 100;
-              warningBox.style.display = "none";
-            }
-            statusMemori = "bawah"; statusGerakan.innerText = "Dorong ke Atas!";
-            repTerhitung = false;
-          }
-          if (sudut > 150 && statusMemori === "bawah" && !repTerhitung) { 
-            catatRep(kualitasRep);
-            statusMemori = "atas"; statusGerakan.innerText = "Turunkan Perlahan";
-            repTerhitung = true;
-          }
+          if (sudut < 110) { if (sudut > 85) { kualitasRep = 50; warningBox.style.display = "block"; } else { kualitasRep = 100; warningBox.style.display = "none"; } statusMemori = "bawah"; repTerhitung = false; }
+          if (sudut > 150 && statusMemori === "bawah" && !repTerhitung) { catatRep(kualitasRep); statusMemori = "atas"; repTerhitung = true; }
         }
-
         if (mode === "lunge") {
-          let sudutKiri = hitungSudut(landmarks[23], landmarks[25], landmarks[27]);
-          let sudutKanan = hitungSudut(landmarks[24], landmarks[26], landmarks[28]);
-          let sudutTerkecil = Math.min(sudutKiri, sudutKanan);
-          if (sudutTerkecil < 130) { 
-            if (sudutTerkecil > 100) { 
-              kualitasRep = 50;
-              warningBox.style.display = "block"; warningBox.innerText = "❌ Tekuk lutut lebih dalam (90 derajat)!";
-            } else {
-              kualitasRep = 100;
-              warningBox.style.display = "none";
-            }
-            statusMemori = "bawah"; statusGerakan.innerText = "Dorong Kembali Naik";
-            repTerhitung = false;
-          }
-          if (sudutTerkecil > 160 && statusMemori === "bawah" && !repTerhitung) { 
-            catatRep(kualitasRep);
-            statusMemori = "atas"; statusGerakan.innerText = "Langkah Kaki & Turun";
-            repTerhitung = true;
-          }
+          let sudutKiri = hitungSudut(landmarks[23], landmarks[25], landmarks[27]); let sudutKanan = hitungSudut(landmarks[24], landmarks[26], landmarks[28]); let sudutTerkecil = Math.min(sudutKiri, sudutKanan);
+          if (sudutTerkecil < 130) { if (sudutTerkecil > 100) { kualitasRep = 50; warningBox.style.display = "block"; } else { kualitasRep = 100; warningBox.style.display = "none"; } statusMemori = "bawah"; repTerhitung = false; }
+          if (sudutTerkecil > 160 && statusMemori === "bawah" && !repTerhitung) { catatRep(kualitasRep); statusMemori = "atas"; repTerhitung = true; }
         }
-
         if (mode === "highknee") {
-          let panggulY = Math.min(landmarks[23].y, landmarks[24].y);
-          let lututTertinggiY = Math.min(landmarks[25].y, landmarks[26].y);
-          let selisih = panggulY - lututTertinggiY; 
-          if (selisih > -0.05) { 
-            if (selisih < 0.05) { 
-              kualitasRep = 50;
-              warningBox.style.display = "block"; warningBox.innerText = "❌ Angkat lutut lebih tinggi!";
-            } else {
-              kualitasRep = 100;
-              warningBox.style.display = "none";
-            }
-            statusMemori = "atas"; statusGerakan.innerText = "Turunkan Kaki";
-            repTerhitung = false;
-          }
-          if (selisih < -0.1 && statusMemori === "atas" && !repTerhitung) { 
-            catatRep(kualitasRep);
-            statusMemori = "bawah"; statusGerakan.innerText = "Ganti Kaki & Angkat!";
-            repTerhitung = true;
-          }
+          let panggulY = Math.min(landmarks[23].y, landmarks[24].y); let lututTertinggiY = Math.min(landmarks[25].y, landmarks[26].y); let selisih = panggulY - lututTertinggiY; 
+          if (selisih > -0.05) { if (selisih < 0.05) { kualitasRep = 50; warningBox.style.display = "block"; } else { kualitasRep = 100; warningBox.style.display = "none"; } statusMemori = "atas"; repTerhitung = false; }
+          if (selisih < -0.1 && statusMemori === "atas" && !repTerhitung) { catatRep(kualitasRep); statusMemori = "bawah"; repTerhitung = true; }
         }
-
         if (mode === "situp") {
           let sudut = hitungSudut(landmarks[11], landmarks[23], landmarks[25]);
-          if (sudut > 120) { 
-            if (sudut < 145) { 
-              kualitasRep = 50;
-              warningBox.style.display = "block"; warningBox.innerText = "❌ Turunkan punggung hingga rileks di lantai!";
-            } else { 
-              kualitasRep = 100;
-              warningBox.style.display = "none";
-            }
-            statusMemori = "bawah"; statusGerakan.innerText = "Angkat Badan!";
-            repTerhitung = false;
-          }
-          if (sudut < 75 && statusMemori === "bawah" && !repTerhitung) { 
-            if (sudut > 60) { 
-               kualitasRep = Math.min(kualitasRep, 50);
-               warningBox.style.display = "block"; warningBox.innerText = "❌ Angkat badan lebih dekat ke lutut!";
-            }
-            catatRep(kualitasRep);
-            statusMemori = "atas"; statusGerakan.innerText = "Turun Perlahan";
-            repTerhitung = true;
-          }
+          if (sudut > 120) { if (sudut < 145) { kualitasRep = 50; warningBox.style.display = "block"; } else { kualitasRep = 100; warningBox.style.display = "none"; } statusMemori = "bawah"; repTerhitung = false; }
+          if (sudut < 75 && statusMemori === "bawah" && !repTerhitung) { if (sudut > 60) { kualitasRep = Math.min(kualitasRep, 50); warningBox.style.display = "block"; } catatRep(kualitasRep); statusMemori = "atas"; repTerhitung = true; }
         }
-
         if (mode === "lateralraise") {
           let sudut = hitungSudut(landmarks[23], landmarks[11], landmarks[13]);
-          if (sudut < 35) { 
-            if (sudut > 20) { 
-              kualitasRep = 50;
-              warningBox.style.display = "block"; warningBox.innerText = "❌ Rapatkan lengan ke samping badan saat turun!";
-            } else { 
-              kualitasRep = 100;
-              warningBox.style.display = "none";
-            }
-            statusMemori = "bawah"; statusGerakan.innerText = "Angkat Ke Samping!";
-            repTerhitung = false;
-          }
-          if (sudut > 75 && statusMemori === "bawah" && !repTerhitung) { 
-            if (sudut < 85) { 
-               kualitasRep = Math.min(kualitasRep, 50);
-               warningBox.style.display = "block"; warningBox.innerText = "❌ Angkat lengan sampai sejajar bahu (90 derajat)!";
-            }
-            catatRep(kualitasRep);
-            statusMemori = "atas"; statusGerakan.innerText = "Turunkan Perlahan";
-            repTerhitung = true;
-          }
+          if (sudut < 35) { if (sudut > 20) { kualitasRep = 50; warningBox.style.display = "block"; } else { kualitasRep = 100; warningBox.style.display = "none"; } statusMemori = "bawah"; repTerhitung = false; }
+          if (sudut > 75 && statusMemori === "bawah" && !repTerhitung) { if (sudut < 85) { kualitasRep = Math.min(kualitasRep, 50); warningBox.style.display = "block"; } catatRep(kualitasRep); statusMemori = "atas"; repTerhitung = true; }
         }
-        
         if (mode === "russiantwist") {
-          let wristX = (landmarks[15].x + landmarks[16].x) / 2;
-          let hipX = (landmarks[23].x + landmarks[24].x) / 2;
-          let diff = wristX - hipX;
-          
-          if (diff > 0.12) { 
-            kualitasRep = 100; warningBox.style.display = "none";
-            statusMemori = "sisi1"; statusGerakan.innerText = "Putar Badan ke Sisi Lainnya!";
-            repTerhitung = false;
-          }
-          if (diff < -0.12 && statusMemori === "sisi1" && !repTerhitung) { 
-            catatRep(kualitasRep);
-            statusMemori = "sisi2"; statusGerakan.innerText = "Putar Kembali!";
-            repTerhitung = true;
-          }
+          let wristX = (landmarks[15].x + landmarks[16].x) / 2; let hipX = (landmarks[23].x + landmarks[24].x) / 2; let diff = wristX - hipX;
+          if (diff > 0.12) { kualitasRep = 100; warningBox.style.display = "none"; statusMemori = "sisi1"; repTerhitung = false; }
+          if (diff < -0.12 && statusMemori === "sisi1" && !repTerhitung) { catatRep(kualitasRep); statusMemori = "sisi2"; repTerhitung = true; }
         }
-        
         if (mode === "glutebridge") {
           let sudut = hitungSudut(landmarks[11], landmarks[23], landmarks[25]);
-          if (sudut < 130) { 
-            if (sudut > 110) { 
-              kualitasRep = 50; warningBox.style.display = "block"; warningBox.innerText = "❌ Turunkan pinggul sampai lantai!"; 
-            } else { 
-              kualitasRep = 100; warningBox.style.display = "none"; 
-            }
-            statusMemori = "bawah"; statusGerakan.innerText = "Angkat Pinggul Tinggi!";
-            repTerhitung = false;
-          }
-          if (sudut > 160 && statusMemori === "bawah" && !repTerhitung) { 
-            if (sudut < 165) { 
-              kualitasRep = Math.min(kualitasRep, 50); warningBox.style.display = "block"; warningBox.innerText = "❌ Angkat panggul lebih tinggi agar sejajar lutut!"; 
-            }
-            catatRep(kualitasRep);
-            statusMemori = "atas"; statusGerakan.innerText = "Turunkan Pinggul Perlahan";
-            repTerhitung = true;
-          }
+          if (sudut < 130) { if (sudut > 110) { kualitasRep = 50; warningBox.style.display = "block"; } else { kualitasRep = 100; warningBox.style.display = "none"; } statusMemori = "bawah"; repTerhitung = false; }
+          if (sudut > 160 && statusMemori === "bawah" && !repTerhitung) { if (sudut < 165) { kualitasRep = Math.min(kualitasRep, 50); warningBox.style.display = "block"; } catatRep(kualitasRep); statusMemori = "atas"; repTerhitung = true; }
         }
-        
         if (mode === "calfraise") {
           let sudut = hitungSudut(landmarks[25], landmarks[27], landmarks[31]);
-          if (sudut < 115) { 
-            kualitasRep = 100; warningBox.style.display = "none";
-            statusMemori = "bawah"; statusGerakan.innerText = "Jinjit Sekuatnya!";
-            repTerhitung = false;
-          }
-          if (sudut > 135 && statusMemori === "bawah" && !repTerhitung) { 
-            catatRep(kualitasRep);
-            statusMemori = "atas"; statusGerakan.innerText = "Turunkan Tumit Perlahan";
-            repTerhitung = true;
-          }
+          if (sudut < 115) { kualitasRep = 100; warningBox.style.display = "none"; statusMemori = "bawah"; repTerhitung = false; }
+          if (sudut > 135 && statusMemori === "bawah" && !repTerhitung) { catatRep(kualitasRep); statusMemori = "atas"; repTerhitung = true; }
         }
-        
         if (mode === "bicyclecrunch") {
           let distKiriKanan = Math.hypot(landmarks[13].x - landmarks[26].x, landmarks[13].y - landmarks[26].y);
           let distKananKiri = Math.hypot(landmarks[14].x - landmarks[25].x, landmarks[14].y - landmarks[25].y);
-
-          if (distKiriKanan < 0.15) { 
-            kualitasRep = 100; warningBox.style.display = "none";
-            statusMemori = "silang1"; statusGerakan.innerText = "Ganti Kaki & Siku!";
-            repTerhitung = false;
-          }
-          if (distKananKiri < 0.15 && statusMemori === "silang1" && !repTerhitung) { 
-            catatRep(kualitasRep);
-            statusMemori = "silang2"; statusGerakan.innerText = "Ganti Sisi Lagi!";
-            repTerhitung = true;
-          }
+          if (distKiriKanan < 0.15) { kualitasRep = 100; warningBox.style.display = "none"; statusMemori = "silang1"; repTerhitung = false; }
+          if (distKananKiri < 0.15 && statusMemori === "silang1" && !repTerhitung) { catatRep(kualitasRep); statusMemori = "silang2"; repTerhitung = true; }
         }
       }
       canvasCtx.restore();
@@ -831,13 +420,10 @@
 
     function selesaiLatihan() {
       matikanKameraDanVideo();
-
       document.getElementById('app-container').style.display = 'none';
       document.getElementById('report-container').style.display = 'block';
       
       let rataRata = historiAkurasi.length > 0 ? Math.round(historiAkurasi.reduce((a,b)=>a+b)/historiAkurasi.length) : 0;
-      
-      // Ambil nama latihan dari judul yang sedang aktif
       document.getElementById('hasilLatihan').innerText = document.getElementById('judul-latihan-terpilih').innerText.replace("Sesi: ", "");
       document.getElementById('hasilRepetisi').innerText = jumlahRepetisi;
       document.getElementById('hasilKemiripan').innerText = rataRata + "%";
