@@ -416,7 +416,7 @@
     };
 
     const pose = new Pose({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`});
-    pose.setOptions({ modelComplexity: 1, smoothLandmarks: true, minDetectionConfidence: 0.85, minTrackingConfidence: 0.85 });
+    pose.setOptions({ modelComplexity: 1, smoothLandmarks: true, minDetectionConfidence: 0.80, minTrackingConfidence: 0.75 });
     pose.onResults(onResults);
 
     function jalankanHitungMundur() {
