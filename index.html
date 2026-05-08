@@ -530,7 +530,7 @@
       if (results.poseLandmarks && isAITracking) {
         // PERUBAHAN WARNA KERANGKA MENJADI CYAN GELAP (#008b8b)
         drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, {color: '#cccccc', lineWidth: 1});
-        drawLandmarks(canvasCtx, results.poseLandmarks, {color: '#cccccc', lineWidth: 2});
+        drawLandmarks(canvasCtx, results.poseLandmarks, {color: '#cccccc', lineWidth: 1});
 
         const mode = pilihanLatihan.value;
         const landmarks = results.poseLandmarks;
